@@ -1,6 +1,7 @@
 import ast
 import os.path
 import warnings
+from decouple import config
 
 import dj_database_url
 import dj_email_url
@@ -60,8 +61,8 @@ DATABASES = {
 }
 
 
-TIME_ZONE = "America/Chicago"
-LANGUAGE_CODE = "en"
+TIME_ZONE = "America/Sao_Paulo"
+LANGUAGE_CODE = "pt-br"
 LANGUAGES = [
     ("ar", _("Arabic")),
     ("az", _("Azerbaijani")),
@@ -199,7 +200,7 @@ TEMPLATES = [
 ]
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = config("SECRET_KEY")
 
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -353,8 +354,8 @@ AUTH_PASSWORD_VALIDATORS = [
     }
 ]
 
-DEFAULT_COUNTRY = os.environ.get("DEFAULT_COUNTRY", "US")
-DEFAULT_CURRENCY = os.environ.get("DEFAULT_CURRENCY", "USD")
+DEFAULT_COUNTRY = os.environ.get("DEFAULT_COUNTRY", "BR")
+DEFAULT_CURRENCY = os.environ.get("DEFAULT_CURRENCY", "R$")
 DEFAULT_DECIMAL_PLACES = get_currency_fraction(DEFAULT_CURRENCY)
 DEFAULT_MAX_DIGITS = 12
 DEFAULT_CURRENCY_CODE_LENGTH = 3
@@ -363,6 +364,9 @@ DEFAULT_CURRENCY_CODE_LENGTH = 3
 AVAILABLE_CURRENCIES = [DEFAULT_CURRENCY]
 
 COUNTRIES_OVERRIDE = {
+    "BR": pgettext_lazy(
+        "Brasil", "Brasil"
+    ),
     "EU": pgettext_lazy(
         "Name of political and economical union of european countries", "European Union"
     )
@@ -619,6 +623,7 @@ GRAPHENE = {
 EXTENSIONS_MANAGER = "saleor.extensions.manager.ExtensionsManager"
 
 PLUGINS = [
+    "saleor.extensions.plugins.pagseguro.plugin.PagSeguroPlugin",
     "saleor.extensions.plugins.avatax.plugin.AvataxPlugin",
     "saleor.extensions.plugins.vatlayer.plugin.VatlayerPlugin",
     "saleor.extensions.plugins.webhook.plugin.WebhookPlugin",
@@ -632,3 +637,9 @@ PLUGINS = [
 # True to use DraftJS (JSON based), for the 2.0 dashboard
 # False to use the old editor from dashboard 1.0
 USE_JSON_CONTENT = get_bool_from_env("USE_JSON_CONTENT", False)
+
+PAGSEGURO_ACCOUNT = config('PAGSEGURO_ACCOUNT')
+PAGSEGURO_TOKEN = config('PAGSEGURO_TOKEN')
+PAGSEGURO_TOKEN = config('PAGSEGURO_TOKEN')
+PAGSEGURO_URL = config('PAGSEGURO_URL', 'https://ws.pagseguro.uol.com.br/v2/checkout')
+PAGSEGURO_SANDBOX = config('PAGSEGURO_SANDBOX', 'https://ws.sandbox.pagseguro.uol.com.br/v2/checkout')
